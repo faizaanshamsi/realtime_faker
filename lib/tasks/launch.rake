@@ -3,8 +3,11 @@ namespace :run do
     task :run do
       pids = []
 
-      (1..6).each do |x|
-        pids << spawn("bundle exec rails server Puma -p 300#{x} -b 127.0.0.1 --pid tmp/pids/server#{x}.pid")
+      number_of_servers = ARGV.last.to_i
+
+      1.upto(number_of_servers) do |x|
+        port = 3000 + x
+        pids << spawn("bundle exec rails server Puma -p #{port} -b 127.0.0.1 --pid tmp/pids/server#{x}.pid")
       end
 
       trap 'INT' do
